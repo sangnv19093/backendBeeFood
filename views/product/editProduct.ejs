@@ -1,0 +1,118 @@
+<%- include('../inc/header-user.ejs') %>
+<div style="margin-top: 80px; height: 100vh; margin-left: 320px; flex: 1">
+  <div class="input-form">
+    <h3 style="text-align: center">Sửa Sản Phẩm</h3>
+    <form
+      enctype="multipart/form-data"
+      method="POST"
+      action="http://localhost:3000/api/product/editProduct/<%= product._id %>"
+    >
+      <div class="mb-3 mt-4">
+        <label class="form-label">Tên Sản Phẩm:</label>
+        <input
+          class="form-control"
+          required
+          placeholder="<%= product.name %>"
+          name="name"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Giá Gốc:</label>
+        <input
+          class="form-control"
+          required
+          type="number"
+          placeholder="<%= product.realPrice %>"
+          name="realPrice"
+        />
+      </div>
+
+      <label class="form-label">Loại Sản Phẩm:</label>
+
+      <div style="display: flex" class="radio-group">
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            placeholder="<%= product.description %>"
+            name="category"
+            value="Trà sữa"
+            checked
+          />Trà Sữa
+          <label class="form-check-label" for="radio1"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Cơm"
+          />Cơm
+          <label class="form-check-label" for="radio2"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Bún"
+          />Bún
+          <label class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Gà"
+          />Gà
+          <label class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Đồ uống"
+          />Đồ uống
+          <label class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Bánh mì"
+          />Bánh mì
+          <label class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Bò"
+          />Bò
+          <label class="form-check-label"></label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Chọn ảnh mới</label>
+        <input type="file" class="form-control" required name="image" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Mô tả sản phẩm</label>
+        <input
+          class="form-control"
+          required
+          placeholder="<%= product.description %>"
+          name="description"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Sửa Sản Phẩm</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../inc/footer.ejs') %>

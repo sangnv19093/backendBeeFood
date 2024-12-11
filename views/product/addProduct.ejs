@@ -1,0 +1,118 @@
+<%- include('../inc/header-user.ejs') %>
+<div style="margin-top: 80px; height: 100vh; margin-left: 320px; flex: 1">
+  <div class="input-form">
+    <h3 style="text-align: center">Thêm Sản Phẩm</h3>
+    <form
+      enctype="multipart/form-data"
+      method="POST"
+      action="api/product/addProduct"
+    >
+      <div class="mb-3 mt-4">
+        <label class="form-label">Tên Sản Phẩm:</label>
+        <input
+          class="form-control"
+          required
+          placeholder="Nhập tên sản phẩm"
+          name="name"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Giá Gốc:</label>
+        <input
+          class="form-control"
+          required
+          type="number"
+          placeholder="Nhập giá gốc"
+          id="realPrice"
+          name="realPrice"
+          min="0"
+        />
+      </div>
+
+      <label class="form-label">Loại Sản Phẩm:</label>
+      <div style="display: flex" class="radio-group">
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Trà sữa"
+            checked
+          />Trà Sữa
+          <label class="form-check-label" for="radio1"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Cơm"
+          />Cơm
+          <label class="form-check-label" for="radio2"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Bún"
+          />Bún
+          <label class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Gà"
+          />Gà
+          <label class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Đồ uống"
+          />Đồ uống
+          <label class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Bánh mì"
+          />Bánh mì
+          <label class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Bò"
+          />Bò
+          <label class="form-check-label"></label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Chọn ảnh</label>
+        <input type="file" class="form-control" required name="image" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Mô Tả Sản Phẩm</label>
+        <input
+          class="form-control"
+          required
+          placeholder="Nhập mô tả cho sản phẩm"
+          name="description"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Thêm Sản Phẩm</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../inc/footer.ejs') %>

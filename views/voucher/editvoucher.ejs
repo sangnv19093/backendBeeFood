@@ -1,0 +1,70 @@
+<%- include('../inc/header-user.ejs') %>
+<div style="margin-top: 80px; height: 100vh; margin-left: 320px; flex: 1">
+  <div class="input-form">
+    <h3 style="text-align: center">Sửa Voucher</h3>
+    <form
+      enctype="multipart/form-data"
+      method="POST"
+      action="http://localhost:3000/api/voucher/editVoucher/<%= voucher._id %>"
+    >
+      <div class="mb-3 mt-4">
+        <label class="form-label">Tên Voucher</label>
+        <input
+          class="form-control"
+          required
+          placeholder="<%= voucher.name %>"
+          name="nameVoucher"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Số tiền </label>
+        <input
+          class="form-control"
+          required
+          type="number"
+          placeholder="<%= voucher.money %>"
+          name="voucherPrice"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Số tiền toi thieu </label>
+        <input
+          class="form-control"
+          required
+          type="number"
+          placeholder="<%= voucher.limit %>"
+          name="limit"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Hạn sử dụng </label>
+        <input
+          class="form-control"
+          required
+          type="date"
+          placeholder="<%= voucher.hsd %>"
+          name="voucherDate"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Chọn ảnh moi</label>
+        <input type="file" class="form-control" required name="image" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Số lượng voucher</label>
+        <input
+          class="form-control"
+          required
+          type="number"
+          placeholder="<%= voucher.quantity %>"
+          name="quantity"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Sua voucher</button>
+    </form>
+  </div>
+</div>
+
+<script></script>
+<%- include('../inc/footer.ejs') %>

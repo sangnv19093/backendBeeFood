@@ -1,0 +1,171 @@
+<%- include('../inc/header-admin.ejs') %>
+<!-- Viết code màn hình tại đây -->
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Thông tin nhà hàng</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb-item">Người dùng</li>
+        <li class="breadcrumb-item active">Nhà hàng</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+
+  <section class="section profile">
+    <div class="row">
+      <div class="col-xl-4">
+        <div class="card">
+          <div
+            class="card-body profile-card pt-4 d-flex flex-column align-items-center"
+          >
+            <img
+              src="<%= restaurant.image %>"
+              alt="Profile"
+              class="rounded-circle"
+            />
+            <h2><%= restaurant.name %></h2>
+            <h3><%= restaurant.email %></h3>
+            <div class="social-links mt-2">
+              <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-8">
+        <div class="card">
+          <div class="card-body pt-3">
+            <!-- Bordered Tabs -->
+            <ul class="nav nav-tabs nav-tabs-bordered">
+              <li class="nav-item">
+                <button
+                  class="nav-link active"
+                  data-bs-toggle="tab"
+                  data-bs-target="#profile-overview"
+                >
+                  Tổng quan
+                </button>
+              </li>
+
+              <li class="nav-item">
+                <button
+                  class="nav-link"
+                  data-bs-toggle="tab"
+                  data-bs-target="#profile-edit"
+                >
+                  Món ăn
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content pt-2">
+              <div
+                class="tab-pane fade show active profile-overview"
+                id="profile-overview"
+              >
+                <h5 class="card-title">Đánh giá của khách hàng</h5>
+
+                <div class="row">
+                  <div class="col-lg-9 col-md-8">
+                    <% if (restaurant.average >= 1) { %> <% for (let i = 1; i <=
+                    restaurant.average; i++) { %>
+                    <i class="bi bi-star-fill text-warning fs-3"></i>
+                    <% } %>
+                    <h6 class="card-title"><%= restaurant.average %> sao</h6>
+                    <% } else { %> Chưa có đánh giá <% } %>
+                  </div>
+                </div>
+
+                <h5 class="card-title">Tổng quan</h5>
+                <p class="small fst-italic">
+                  Là một chuyên gia trong ngành F&B với kinh nghiệm hơn 10 năm
+                  hoạt động trong lĩnh vực này. Có kiến thức sâu rộng về sản
+                  xuất, tiêu thụ, quản lý, phân phối và tiếp thị các sản phẩm
+                  thực phẩm và đồ uống. Tôi đã thành công trong việc phát triển
+                  và quản lý các nhãn hiệu thực phẩm và đồ uống của nhiều công
+                  ty lớn và nhỏ. Với tinh thần sáng tạo và đam mê, tôi luôn tìm
+                  kiếm những cách tiếp cận mới để cải thiện chất lượng sản phẩm
+                  và nâng cao trải nghiệm của khách hàng.
+                </p>
+
+                <h5 class="card-title">Thông tin chính</h5>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Nhà hàng</div>
+                  <div class="col-lg-9 col-md-8"><%= restaurant.name %></div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Email</div>
+                  <div class="col-lg-9 col-md-8"><%= restaurant.email %></div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Số điện thoại</div>
+                  <div class="col-lg-9 col-md-8"><%= restaurant.phone %></div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Địa chỉ</div>
+                  <div class="col-lg-9 col-md-8">
+                    <%= restaurant.address %>2
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                <!-- Profile Edit Form -->
+                <h2>Danh sách món ăn</h2>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Tên món ăn</th>
+                      <th scope="col">Ảnh</th>
+                      <th scope="col">Mô tả</th>
+                      <th scope="col">Giá gốc</th>
+                      <th scope="col">Danh mục</th>
+                      <th scope="col">Giá sau giảm giá</th>
+                      <th scope="col">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for(let i = 0; i < products.length; i++) { %>
+                    <tr>
+                      <th scope="row"><%= i + 1 %></th>
+                      <td><%= products[i].name %></td>
+                      <td>
+                        <img
+                          src="<%= products[i].image %>"
+                          alt="<%= products[i].name %>"
+                          style="max-width: 100px; max-height: 100px"
+                        />
+                      </td>
+                      <td><%= products[i].description %></td>
+                      <td><%= products[i].realPrice %></td>
+                      <td><%= products[i].category %></td>
+                      <td><%= products[i].discountPrice %></td>
+                      <td>
+                        <a href="#" class="btn btn-danger">Report</a>
+                      </td>
+                    </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+                <!-- End Profile Edit Form -->
+              </div>
+            </div>
+            <!-- End Bordered Tabs -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+
+<%- include('../inc/footer.ejs') %>

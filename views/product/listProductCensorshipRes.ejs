@@ -1,0 +1,59 @@
+<%- include('../inc/header-user.ejs') %>
+<!-- Viết code màn hình tại đây -->
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Danh sách sản phẩm đang chờ duyệt</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Danh sách sản phẩm</li>
+      </ol>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tên</th>
+            <th scope="col">Ảnh</th>
+            <th scope="col">Mô tả</th>
+            <th scope="col">Giá</th>
+            <th scope="col">Sau giảm giá</th>
+            <th scope="col">Danh mục</th>
+            <th scope="col">Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let i = 0; i < list.length; i++) { %>
+          <tr class="<%= list[i].trangthai === 1 ? 'table-danger' : '' %>">
+            <th scope="row"><%= i + 1 %></th>
+            <td><%= list[i].name %></td>
+            <td>
+              <img
+                src="<%= list[i].image %>"
+                alt="<%= list[i].name %>"
+                style="max-width: 100px"
+              />
+            </td>
+            <td><%= list[i].description %></td>
+            <td><%= list[i].realPrice %></td>
+            <td><%= list[i].discountPrice %></td>
+            <td><%= list[i].category %></td>
+            <td>
+              <%= list[i].trangthai === 1 ? "Bị từ chối" : "Đang chờ duyệt..."
+              %>
+            </td>
+            <td>
+              <a
+                href="/listCensor/huy/<%= list[i]._id %>"
+                class="btn btn-danger"
+                >Huỷ</a
+              >
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+</main>
+<%- include('../inc/footer.ejs') %>

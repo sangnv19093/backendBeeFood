@@ -1,0 +1,199 @@
+<%- include('../inc/header-admin.ejs') %>
+  <!-- Viết code màn hình tại đây -->
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Danh sách người dùng</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+          <li class="breadcrumb-item active">Danh sách người dùng</li>
+        </ol>
+        <div class="search-container">
+          <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm người dùng...">
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Username</th>
+              <th scope="col">Role</th>
+              <th scope="col">Phone</th>
+              <th scope="col" style="text-align: right;">Đơn đã mua</th>
+              <th scope="col" data-sort-type="number" style="text-align: right;" data-sort-order="asc">Doanh thu ↑↓</th>
+              <th scope="col" style="text-align: right;">Tạo tài khoản</th>
+              <th scope="col">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% list.forEach(user=> { %>
+              <tr>
+                <td>
+                  <a href="/user/profile/<%= user._id %>">
+                    <%= user.username %>
+                  </a>
+                </td>
+                <td>
+                  <%= user.role %>
+                </td>
+                <td>
+                  <%= user.phone %>
+                </td>
+                <td style="text-align: right;">
+                  <%= user.count %>
+                </td>
+                <td style="text-align: right;">
+                  <%= user.totalAmount %>
+                </td>
+                <td style="text-align: right;">
+                  <%= user.timeSinceCreated %>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-<%= user.isLocked ? 'success' : 'danger' %>"
+                    data-user-id="<%= user._id %>" data-action="<%= user.isLocked ? 'unlock' : 'lock' %>">
+                    <%= user.isLocked ? 'Mở khóa' : 'Khóa' %>
+                  </button>
+                </td>
+              </tr>
+              <% }); %>
+          </tbody>
+        </table>
+    </div>
+    <!-- End Page Title -->
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const table = document.querySelector('.table');
+      const headers = table.querySelectorAll('th');
+
+      headers.forEach(header => {
+        header.addEventListener('click', () => {
+          const sortType = header.getAttribute('data-sort-type');
+          const sortOrder = header.getAttribute('data-sort-order');
+
+          // Xử lý sắp xếp ở đây
+          sortTable(table, sortType, sortOrder);
+
+          // Đảo ngược thứ tự sắp xếp và cập nhật thuộc tính data-sort-order
+          header.setAttribute('data-sort-order', sortOrder === 'asc' ? 'desc' : 'asc');
+        });
+      });
+    });
+
+    function sortTable(table, type, order) {
+      const tbody = table.querySelector('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+
+      rows.sort((a, b) => {
+        const aValue = getDataValue(a, type);
+        const bValue = getDataValue(b, type);
+
+        if (order === 'asc') {
+          return aValue - bValue;
+        } else {
+          return bValue - aValue;
+        }
+      });
+
+      tbody.innerHTML = '';
+      rows.forEach(row => tbody.appendChild(row));
+    }
+
+    function getDataValue(row, type) {
+      // Lấy giá trị từ cột thứ index tương ứng với loại dữ liệu
+      const index = {
+        'number': 3, // Đơn đã mua
+        'number': 4,   // Doanh thu
+      }[type];
+
+      const cell = row.cells[index];
+
+      // Kiểm tra xem cell có tồn tại không
+      if (!cell) {
+        return 0;
+      }
+
+      // Lấy giá trị textContent từ cell (hoặc giá trị mặc định là '')
+      const value = cell.textContent ? cell.textContent.trim() : '';
+
+      console.log('Original Cell Value:', value);
+
+      // Kiểm tra xem giá trị có tồn tại không
+      if (!value) {
+        return 0;
+      }
+
+      switch (type) {
+        case 'number':
+          return parseFloat(value) || 0;
+        case 'date':
+          return new Date(value).getTime() || 0;
+        default:
+          return value.toLowerCase();
+      }
+    }
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const table = document.querySelector('.table');
+      const searchInput = document.querySelector('#searchInput');
+
+      // Bắt sự kiện khi người dùng nhập vào ô tìm kiếm
+      searchInput.addEventListener('input', function () {
+        const searchTerm = searchInput.value.toLowerCase();
+        const rows = table.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+          const username = row.cells[0].textContent.toLowerCase();
+          const role = row.cells[1].textContent.toLowerCase();
+          const phone = row.cells[2].textContent.toLowerCase();
+
+          // Kiểm tra nếu từ khóa xuất hiện trong username, role hoặc phone
+          if (username.includes(searchTerm) || role.includes(searchTerm) || phone.includes(searchTerm)) {
+            row.style.display = ''; // Hiển thị hàng
+          } else {
+            row.style.display = 'none'; // Ẩn hàng
+          }
+        });
+      });
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const table = document.querySelector('.table');
+
+      // Xử lý khóa/mở khóa người dùng
+      table.addEventListener('click', function (event) {
+        const target = event.target;
+        if (target.tagName === 'BUTTON' && target.dataset.userId) {
+          const userId = target.dataset.userId;
+          const action = target.dataset.action;
+
+          fetch(`/api/users/${action}/${userId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                // Cập nhật giao diện sau khi thành công
+                target.dataset.action = action === 'lock' ? 'unlock' : 'lock';
+                target.classList.toggle('btn-danger');
+                target.classList.toggle('btn-success');
+                target.textContent = action === 'lock' ? 'Mở khóa' : 'Khóa';
+                alert(data.message);
+              } else {
+                alert(data.message || 'Có lỗi xảy ra!');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Không thể thực hiện yêu cầu.');
+            });
+        }
+      });
+    });
+  </script>
+
+
+
+  <%- include('../inc/footer.ejs') %>

@@ -1,0 +1,38 @@
+<%- include('../inc/header-user.ejs') %>
+  <div style="margin-top: 80px; height: 100vh; margin-left: 320px; flex: 1">
+    <div class="input-form">
+      <h3 style="text-align: center">Chỉnh sửa thông tin</h3>
+      <form enctype="multipart/form-data" method="POST" action="api/restaurant/editProfile">
+
+        <!-- Thêm trường sửa tên -->
+        <div class="mb-3 mt-4">
+          <label class="form-label">Tên nhà hàng</label>
+          <input type="text" class="form-control" required placeholder="Tên nhà hàng" name="name" />
+        </div>
+
+        <div class="mb-3 mt-4">
+          <label class="form-label">Thời gian mở</label>
+          <input class="form-control" required placeholder="Thời gian mở" name="timeon" />
+        </div>
+
+        <div class="mb-3 mt-4">
+          <label class="form-label">Thời gian đóng</label>
+          <input class="form-control" required placeholder="Thời gian đóng" name="timeoff" />
+        </div>
+
+        <div class="mb-3 mt-4">
+          <label class="form-label">Địa chỉ</label>
+          <input class="form-control" required placeholder="Địa chỉ" name="address" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Chọn ảnh</label>
+          <input type="file" class="form-control" required name="image" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+      </form>
+    </div>
+  </div>
+
+  <%- include('../inc/footer.ejs') %>

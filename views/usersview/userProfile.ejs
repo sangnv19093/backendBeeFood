@@ -1,0 +1,123 @@
+<%- include('../inc/header-admin.ejs') %>
+<!-- Viết code màn hình tại đây -->
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Thông tin người dùng</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb-item">Người dùng</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+
+  <section class="section profile">
+    <div class="row">
+      <div class="col-xl-4">
+        <div class="card">
+          <div
+            class="card-body profile-card pt-4 d-flex flex-column align-items-center"
+          >
+            <img src="<%= user.image %>" alt="Profile" class="rounded-circle" />
+            <h2><%= user.username %></h2>
+            <h3><%= user.phone %></h3>
+            <div class="social-links mt-2">
+              <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-8">
+        <div class="card">
+          <div class="card-body pt-3">
+            <!-- Bordered Tabs -->
+            <ul class="nav nav-tabs nav-tabs-bordered">
+              <li class="nav-item">
+                <button
+                  class="nav-link active"
+                  data-bs-toggle="tab"
+                  data-bs-target="#profile-overview"
+                >
+                  Tổng quan
+                </button>
+              </li>
+
+              <li class="nav-item">
+                <button
+                  class="nav-link"
+                  data-bs-toggle="tab"
+                  data-bs-target="#profile-edit"
+                >
+                  Đơn mua
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content pt-2">
+              <div
+                class="tab-pane fade show active profile-overview"
+                id="profile-overview"
+              >
+                <h5 class="card-title">Thông tin chính</h5>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Khách hàng</div>
+                  <div class="col-lg-9 col-md-8"><%= user.username %></div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Vai trò</div>
+                  <div class="col-lg-9 col-md-8"><%= user.role %></div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Số điện thoại</div>
+                  <div class="col-lg-9 col-md-8"><%= user.phone %></div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Ngày sinh</div>
+                  <div class="col-lg-9 col-md-8"><%= user.birthday %></div>
+                </div>
+
+                
+              </div>
+              <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                <!-- Profile Edit Form -->
+                <div class="row">
+                    <h3>Tổng đơn: <%= count %></h3>
+                    <h3>Tổng tiền: <%= totalAmount %> vnđ</h3>
+                </div>
+                
+                <hr>
+                <h2>Danh sách đơn đã đặt</h2>
+                <div class="row">
+                    <% orders.forEach(order => { %>
+                      <div class="col-md-6 mb-3">
+                        <div class="card">
+                          <div class="card-body">
+                            <h5 class="card-title"><%= order.products[0].name %></h5>
+                            <p class="card-text">Tổng tiền: <%= order.toltalprice %></p>
+                            <p class="card-text">Ngày mua: <%= order.time %></p>
+                          </div>
+                        </div>
+                      </div>
+                    <% }); %>
+                  </div>
+                <!-- End Profile Edit Form -->
+              </div>
+            </div>
+            <!-- End Bordered Tabs -->
+            
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+
+<%- include('../inc/footer.ejs') %>

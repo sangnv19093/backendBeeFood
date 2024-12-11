@@ -1,0 +1,190 @@
+<%- include('../inc/header-user.ejs') %>
+
+<div style="margin-top: 80px; margin-left: 320px">
+  <div>
+    <label for="statusFilter">Lọc theo trạng thái:</label>
+    <select id="statusFilter" onchange="filterOrdersByStatus()">
+      <option value="all">Tất cả</option>
+      <option value="0">Chờ xác nhận</option>
+      <option value="1">Đã xác nhận</option>
+      <option value="2">Đang giao</option>
+    </select>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Mã Đơn Hàng</th>
+          <th scope="col">Địa Chỉ Đơn Hàng</th>
+          <th scope="col">Sản Phẩm</th>
+          <th scope="col">Phương Thức Thanh Toán</th>
+          <th scope="col">Trạng Thái</th>
+          <th scope="col">Ghi Chú</th>
+          <th scope="col">Cập Nhật Trạng Thái</th>
+        </tr>
+      </thead>
+      <tbody id="orderTableBody">
+        <!-- Dữ liệu sẽ được cập nhật tại đây -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  let orders; // Khai báo orders tại phạm vi toàn cục
+
+  document.addEventListener("DOMContentLoaded", async function () {
+    try {
+      const response = await fetch("/api/ordersByRestaurant");
+      orders = await response.json(); // Gán giá trị cho biến orders
+      const tableBody = document.getElementById("orderTableBody");
+      displayOrders(orders);
+    } catch (error) {
+      console.error("Lỗi khi tải hoặc xử lý dữ liệu:", error);
+    }
+  });
+
+  async function updateOrderStatus(event, orderId, currentStatus) {
+    event.preventDefault(); // Ngăn chặn sự kiện mặc định của form
+    const statusSelect = document.getElementById(`statusSelect-${orderId}`);
+    const newStatus = statusSelect.value;
+
+    // Kiểm tra trạng thái mới
+    if (isValidStatusChange(currentStatus, newStatus)) {
+      try {
+        const response = await fetch(`/api/updateOrderStatus/${orderId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        });
+
+        const result = await response.json();
+        console.log(result);
+        location.reload();
+
+        const statusCell = document.querySelector(
+          `[data-orderid="${orderId}"]`
+        );
+        statusCell.innerHTML = getOrderStatusText(newStatus);
+      } catch (error) {
+        console.error("Lỗi cập nhật trạng thái đơn hàng:", error);
+      }
+    } else {
+      alert("Trạng thái không được duyệt ngược.");
+    }
+  }
+
+  function isValidStatusChange(currentStatus, newStatus) {
+    currentStatus = parseInt(currentStatus);
+    newStatus = parseInt(newStatus);
+
+    // Kiểm tra nếu cố gắng chuyển trạng thái thành "Đã giao" (3) trước khi xác nhận (1)
+    if (newStatus === 2 && currentStatus < 1) {
+      return false;
+  }
+    if (newStatus === 3 && currentStatus < 1) {
+        return false;
+    }
+
+    // Đảm bảo trạng thái mới không nhỏ hơn trạng thái hiện tại
+    return newStatus >= currentStatus;
+}
+
+  function getOrderStatusText(status) {
+    switch (parseInt(status)) {
+      case 1:
+        return "Đã xác nhận";
+      case 2:
+        return "Đang giao";
+      case 3:
+        return "Đã giao";
+      case 4:
+        return "Đã hủy";
+      default:
+        return "Chờ xác nhận";
+    }
+  }
+
+  function filterOrdersByStatus() {
+    const statusFilter = document.getElementById("statusFilter");
+    const selectedStatus = statusFilter.value;
+    const tableBody = document.getElementById("orderTableBody");
+
+    // Xóa các dòng hiện tại trong bảng
+    tableBody.innerHTML = "";
+
+    // Lọc và hiển thị đơn hàng
+    displayOrders(
+      orders.filter(
+        (order) =>
+          selectedStatus === "all" || order.status.toString() === selectedStatus
+      )
+    );
+  }
+
+  function displayOrders(orders) {
+    const tableBody = document.getElementById("orderTableBody");
+
+     // Sắp xếp đơn hàng theo ngày tạo (createdAt), mới nhất lên đầu
+     orders.sort((a, b) => {
+      if (a.createdAt && b.createdAt) {
+          return new Date(b.createdAt) - new Date(a.createdAt); // Nếu có trường createdAt
+      } else {
+          return parseInt(b._id.substring(0, 8), 16) - parseInt(a._id.substring(0, 8), 16); // Nếu không, sắp xếp theo _id
+      }
+  });
+
+  // Lọc và hiển thị các đơn hàng không có trạng thái "Đã giao" (3) và "Đã hủy" (4)
+  tableBody.innerHTML = ""; // Xóa nội dung cũ trong bảng
+
+    orders
+      .filter((order) => order.status !== 3 && order.status !== 4)
+      .forEach((order) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${order._id}</td>
+          <td>${order.address}</td>
+          <td>${order.products
+            .map((product) => `${product.name} x${product.quantity}`)
+            .join("<br>")}</td>
+          <td>${
+            order.phuongthucthanhtoan === "cash"
+              ? "Thanh toán tiền mặt"
+              : "Chuyển khoản"
+          }</td>
+          <td>${getOrderStatusText(order.status)}</td>
+          <td>${order.notes}</td>
+          <td>
+            <form onsubmit="updateOrderStatus(event, '${order._id}', '${
+          order.status
+        }')">
+              <div class="update-status-container">
+                <select id="statusSelect-${order._id}" data-orderid="${
+          order._id
+        }">
+                  <option value="1" ${
+                    order.status === 1 ? "selected" : ""
+                  }>Đã xác nhận</option>
+                  <option value="2" ${
+                    order.status === 2 ? "selected" : ""
+                  }>Đang giao</option>
+                  <option value="3" ${
+                    order.status === 3 ? "selected" : ""
+                  }>Đã giao</option>
+                  <option value="4" ${
+                    order.status === 4 ? "selected" : ""
+                  }>Đã hủy</option>
+                </select>
+                <button type="submit">Cập nhật</button>
+              </div>
+            </form>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+  }
+</script>
+<%- include('../inc/footer.ejs') %>

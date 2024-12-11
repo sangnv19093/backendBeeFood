@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danh sách sản phẩm</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+    
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+    
+      .table th,
+      .table td {
+        border: 1px solid #ddd; 
+        padding: 8px; 
+        text-align: center; 
+        vertical-align: middle;
+      }
+    
+      .table th {
+        background-color: #f4f4f4; /* Màu nền cho tiêu đề */
+        font-weight: bold; /* In đậm tiêu đề */
+      }
+    
+      .table tr:nth-child(even) {
+        background-color: #f9f9f9; /* Màu nền xen kẽ */
+      }
+    
+      .table tr:hover {
+        background-color: #f1f1f1; /* Đổi màu khi rê chuột */
+      }
+    
+      img {
+        width: 80px; 
+        height: 80px;
+        border-radius: 5px; 
+        object-fit: cover;
+        border: 1px solid #ddd; 
+        background-color: #f9f9f9; 
+      }
+    
+      .action {
+        display: flex;
+        gap: 10px;
+        justify-content: center; 
+      }
+    
+      .action button {
+        padding: 8px 16px; 
+        font-size: 14px;
+        border: none; 
+        border-radius: 5px; 
+        cursor: pointer; 
+        transition: all 0.3s ease; 
+      }
+
+    .action .button.delete {
+      background-color: #dc3545; 
+      color: white; 
+    }
+
+    .action .button.delete:hover {
+      background-color: #c82333; 
+    }
+
+    .action .button.update {
+      background-color: #28a745; 
+      color: white; 
+    }
+
+    .action .button.update:hover {
+      background-color: #218838; 
+    }
+    
+      form {
+        margin-bottom: 20px;
+      }
+    
+      /* Đảm bảo bảng không tràn màn hình */
+      .table-container {
+        overflow-x: auto;
+        margin-top: 20px;
+      }
+    </style>
+    
+  </head>
+  <body>
+    <%- include('../inc/header-user.ejs') %>
+    <div style="margin-top: 80px; height: 100vh; margin-left: 320px; flex: 1">
+      <form style="width: 500px" class="d-flex" method="post" action="/api/search">
+        <input
+          class="form-control me-2"
+          type="search"
+          name="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">STT</th>
+              <th scope="col">Tên Sản Phẩm</th>
+              <th scope="col">Ảnh</th>
+              <th scope="col">Giá Bán Hiện Tại</th>
+              <th scope="col">Danh Mục</th>
+              <th scope="col">Thao Tác</th>
+              <th scope="col">Trạng Thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (let i = 0; i < list.length; i++) { %>
+            <tr>
+              <th scope="row"><%= i + 1 %></th>
+              <td><%= list[i].name %></td>
+              <td>
+                <img
+                  src="<%= list[i].image %>"
+                  alt="<%= list[i].name %>"
+                />
+              </td>
+              <td><%= list[i].realPrice %></td>
+              <td><%= list[i].category %></td>
+              <td>
+                <div class="action">
+                  <a href="#">
+                    <button type="button" class="delete button" data-bs-toggle="modal" data-id="<%= list[i]._id %>" data-bs-target="#myModal">
+                      <%= list[i].isHide ? 'Khôi Phục Lại' : 'Ngừng Kinh Doanh' %>
+                    </button>
+                  </a>
+                  <a href="editProduct/<%= list[i]._id %>">
+                    <button type="button" class="update button">Sửa</button>
+                  </a>
+                </div>
+              </td>
+              <td>
+                <%= list[i].isHide ? 'Ngừng Kinh Doanh' : 'Đang Hoạt Động' %>
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal" id="myModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Ngừng Kinh Doanh?</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              Bạn Có Chắc Chắn Muốn Ngừng Kinh Doanh?
+            </div>
+            <div class="modal-footer">
+              <button id="delete-btn" type="button" class="btn btn-success">Đồng Ý</button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Hủy Bỏ</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form method="POST" name="delete-product-form" enctype="multipart/form-data"></form>
+    </div>
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var productId;
+        var deleteForm = document.forms["delete-product-form"];
+        $("#myModal").on("show.bs.modal", function (event) {
+          var button = $(event.relatedTarget);
+          productId = button.data("id");
+        });
+
+        var btnDelete = document.getElementById("delete-btn");
+        btnDelete.onclick = function () {
+          deleteForm.action = "api/product/delete/" + productId;
+          deleteForm.submit();
+        };
+      });
+    </script>
+
+<div style="margin-top: 100px;">
+  <%- include('../inc/footer.ejs') %>
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,212 @@
+<%- include('../inc/header-user.ejs') %>
+  <div class="order-container">
+    <div class="order-content">
+      <h2>Danh sách Đơn hàng</h2>
+
+      <div class="button-container">
+        <button id="donthanhcong">Đơn thành công</button>
+        <button id="donhuy">Đơn đã hủy</button>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Mã đơn hàng</th>
+            <th>Trạng thái</th>
+            <th>Thời gian</th>
+          </tr>
+        </thead>
+        <tbody id="orderTableBody">
+          <!-- Dữ liệu sẽ được cập nhật tại đây -->
+        </tbody>
+      </table>
+
+      <!-- Thêm biểu đồ -->
+      <div class="chart-container">
+        <canvas id="orderChart" width="300" height="150"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .order-container {
+      margin-top: 80px;
+      height: 100vh;
+      margin-left: 180px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .order-content {
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .order-content h2 {
+      margin-bottom: 20px;
+    }
+
+    .button-container {
+      margin-bottom: 20px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .table th,
+    .table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .table th {
+      background-color: #f2f2f2;
+    }
+
+    .button-container button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .button-container button:hover {
+      background-color: #45a049;
+    }
+
+    /* Style cho biểu đồ */
+    .chart-container {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    let defaultLoad = "thanhcong";
+    var btnDonHuy = document.getElementById("donhuy");
+    var btnDonTc = document.getElementById("donthanhcong");
+    var slh = document.getElementById("slh");
+    var sltc = document.getElementById("sltc");
+    var orderChart = document.getElementById("orderChart").getContext("2d");
+
+    const tableBody = document.getElementById("orderTableBody");
+    var orders = [];
+    let totalAmount = 0;
+
+    // Khởi tạo biểu đồ
+    var chart = new Chart(orderChart, {
+      type: "bar",
+      data: {
+        labels: ["Đơn thành công", "Đơn đã hủy"],
+        datasets: [
+          {
+            label: "Số lượng đơn",
+            data: [0, 0],
+            backgroundColor: ["green", "red"],
+          },
+        ],
+      },
+    });
+
+    btnDonTc.onclick = async function () {
+      defaultLoad = "thanhcong";
+      orders = [];
+      try {
+        const response = await fetch(`/api/orderStatistics/${defaultLoad}`);
+        orders = await response.json();
+        updateChartData(orders.soluongthanhcong, orders.soluongdahuy);
+        updateTableData(orders.orders);
+      } catch (error) {
+        console.error("Error fetching or processing data:", error);
+      }
+    };
+
+    btnDonHuy.onclick = async function () {
+      defaultLoad = "huy";
+      try {
+        const response = await fetch(`/api/orderStatistics/${defaultLoad}`);
+        orders = await response.json();
+        updateChartData(orders.soluongthanhcong, orders.soluongdahuy);
+        updateTableData(orders.orders);
+      } catch (error) {
+        console.error("Error fetching or processing data:", error);
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      try {
+        const response = await fetch(`/api/orderStatistics/${defaultLoad}`);
+        orders = await response.json();
+        slh.textContent = orders.soluongdahuy;
+        sltc.textContent = orders.soluongthanhcong;
+        updateChartData(orders.soluongthanhcong, orders.soluongdahuy);
+        updateTableData(orders.orders);
+      } catch (error) {
+        console.error("Error fetching or processing data:", error);
+      }
+    });
+
+    // Hàm cập nhật dữ liệu biểu đồ
+    function updateChartData(successful, canceled) {
+      chart.data.datasets[0].data = [successful, canceled];
+      chart.update();
+    }
+
+    const formatTimeVietNam = (timeString) => {
+      // Tạo đối tượng Date từ chuỗi thời gian
+      const date = new Date(timeString);
+
+      // Điều chỉnh múi giờ (UTC+7)
+      const vietnamTime = new Date(date.getTime());
+
+      // Format giờ
+      const hours = vietnamTime.getUTCHours().toString().padStart(2, '0');
+      const minutes = vietnamTime.getUTCMinutes().toString().padStart(2, '0');
+      const seconds = vietnamTime.getUTCSeconds().toString().padStart(2, '0');
+
+      // Format ngày
+      const day = vietnamTime.getUTCDate().toString().padStart(2, '0');
+      const month = (vietnamTime.getUTCMonth() + 1).toString().padStart(2, '0');
+      const year = vietnamTime.getUTCFullYear();
+
+      // Trả về chuỗi đầy đủ
+      return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
+    };
+
+
+    // Hàm cập nhật dữ liệu bảng
+    function updateTableData(data) {
+      while (tableBody.rows.length > 0) {
+        tableBody.deleteRow(0);
+      }
+      data.forEach((order, index) => {
+        const totalPrice = order.products.reduce(
+          (sum, product) => sum + product.price,
+          0
+        );
+        const row = document.createElement("tr");
+        row.innerHTML = `
+        <td>
+            <ul>
+              <li>${++index}</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+               <a href="/donhang/${order._id}"><li>${order._id}</li></a>
+            </ul>
+          </td>
+          <td>${order.status === 3 ? "Hoàn thành" : "Đã hủy"}</td>
+          <td>${formatTimeVietNam(order.time)}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+  </script>

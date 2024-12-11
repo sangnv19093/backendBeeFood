@@ -1,0 +1,124 @@
+<%- include('../inc/header-admin.ejs') %>
+<!-- Viết code màn hình tại đây -->
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Danh sách sản phẩm</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Danh sách sản phẩm</li>
+      </ol>
+      <form id="categoryForm" class="d-flex me-5 col-9">
+        <!-- Chọn thể loại -->
+        <div class="d-flex col-6">
+            <label for="categoryFilter" class="me-2 col-4">Chọn thể loại:</label>
+            <select id="categoryFilter" name="categoryFilter" class="form-select me-2">
+                <option value="Tất cả" <%= req.query.categoryFilter === 'Tất cả' ? 'selected' : '' %>>Tất cả</option>
+                <option value="Trà sữa" <%= req.query.categoryFilter === 'Trà sữa' ? 'selected' : '' %>>Trà Sữa</option>
+                <option value="Cơm" <%= req.query.categoryFilter === 'Cơm' ? 'selected' : '' %>>Cơm</option>
+                <option value="Bún" <%= req.query.categoryFilter === 'Bún' ? 'selected' : '' %>>Bún</option>
+                <option value="Gà" <%= req.query.categoryFilter === 'Gà' ? 'selected' : '' %>>Gà</option>
+                <option value="Đồ uống" <%= req.query.categoryFilter === 'Đồ uống' ? 'selected' : '' %>>Đồ Uống</option>
+                <option value="Bánh Mì" <%= req.query.categoryFilter === 'Bánh mì' ? 'selected' : '' %>>Bánh Mì</option>
+                <option value="Bò" <%= req.query.categoryFilter === 'Bò' ? 'selected' : '' %>>Bò</option>
+            </select>
+        </div>
+    
+        <!-- Chọn nhà hàng -->
+        <div class="d-flex me-5 col-6">
+            <label for="restaurantFilter" class="me-2 col-5">Chọn nhà hàng:</label>
+            <select id="restaurantFilter" name="restaurantFilter" class="form-select me-2">
+                <option value="tatca" <%= req.query.restaurantFilter === 'tatca' ? 'selected' : '' %>>Tất cả</option>
+                <% for (let i = 0; i < listRestaurant.length; i++) { %>
+                    <option value="<%= listRestaurant[i]._id %>" <%= req.query.restaurantFilter === listRestaurant[i]._id.toString() ? 'selected' : '' %>>
+                        <%= listRestaurant[i].name %>
+                    </option>
+                <% } %>
+            </select>
+        </div>
+    
+        <!-- Nút submit -->
+        <button type="submit" class="btn btn-primary text-white">Lọc</button>
+    </form>
+    
+    <form
+      class="d-flex col-6 mb-2 mt-3"
+    >
+    <label for="restaurantFilter" class="me-2 col-3">Tìm kiếm:</label>
+    
+      <input
+        class="form-control me-2"
+        type="text"
+        placeholder="Nhập tên món ăn"
+        aria-label="Search"
+        name="name"
+        id="name"
+      />
+      <button class="btn btn-primary text-white" type="submit">Search</button>
+    </form>
+      <!-- Hiển thị danh sách sản phẩm -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tên</th>
+            <th scope="col">Ảnh</th>
+            <th scope="col">Mô tả</th>
+            <th scope="col">Nhà hàng</th>
+            <th scope="col">Giá</th>
+            <th scope="col">Giá đã giảm</th>
+            <th scope="col">Thể loại</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let i = 0; i < list.length; i++) { %>
+          <tr>
+            <th scope="row"><%= i + 1 %></th>
+            <td><%= list[i].name %></td>
+            <td>
+              <img
+                src="<%= list[i].image %>"
+                alt="<%= list[i].name %>"
+                style="max-width: 100px"
+              />
+            </td>
+            <td><%= list[i].description %></td>
+            <td>
+              <a href="/res/profile/<%= list[i].restaurantId %>">
+                <%= list[i].restaurantName %>
+              </a>
+            </td>
+            <td><%= list[i].realPrice %></td>
+            <td><%= list[i].discountPrice %></td>
+            <td><%= list[i].category %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <% if (pagination.currentPage > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="<%= `${pagination.baseUrl}?page=${pagination.currentPage - 1}` %>">&laquo; Previous</a>
+            </li>
+          <% } %>
+      
+          <% for (let i = 1; i <= pagination.totalPages; i++) { %>
+            <li class="page-item <%= i === pagination.currentPage ? 'active' : '' %>">
+              <a class="page-link" href="<%= `${pagination.baseUrl}?page=${i}` %>"><%= i %></a>
+            </li>
+          <% } %>
+      
+          <% if (pagination.currentPage < pagination.totalPages) { %>
+            <li class="page-item">
+              <a class="page-link" href="<%= `${pagination.baseUrl}?page=${pagination.currentPage + 1}` %>">Next &raquo;</a>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+</main>
+
+<%- include('../inc/footer.ejs') %>

@@ -1,0 +1,54 @@
+<%- include('../inc/header-user.ejs') %>
+<!-- Viết code màn hình tại đây -->
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Danh sách đơn hàng</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Danh sách đơn hàng</li>
+      </ol>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Restaurant Name</th>
+            <th>Food Name</th>
+            <th>Image</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Order Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% list.forEach(item => { %>
+          <tr>
+            <td>
+              <%= item.userId && item.userId.username ? item.userId.username :
+              'N/A' %>
+            </td>
+            <td><%= item.restaurantName || 'N/A' %></td>
+            <td><%= item.name || 'N/A' %></td>
+            <td>
+              <% if (item.image) { %>
+              <img
+                src="<%= item.image %>"
+                alt="<%= item.name %>"
+                style="max-width: 100px"
+              />
+              <% } else { %>
+              <span>No Image</span>
+              <% } %>
+            </td>
+            <td><%= item.price != null ? item.price : 'N/A' %></td>
+            <td><%= item.quantity != null ? item.quantity : 'N/A' %></td>
+            <td><%= item.orderDate || 'N/A' %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+</main>
+<%- include('../inc/footer.ejs') %>

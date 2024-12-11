@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style></style>
+  </head>
+  <body>
+    <%- include('../inc/header-user.ejs') %>
+    <div style="margin-top: 80px; height: 100vh; margin-left: 320px; flex: 1">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Mã voucher</th>
+            <th scope="col">Tên Voucher</th>
+            <th scope="col">Số tiền</th>
+            <th scope="col">Số tiền tối thiểu</th>
+            <th scope="col">Ảnh</th>
+            <th scope="col">Số lượng</th>
+            <th scope="col">Thao Tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let i = 0; i < list.length; i++) { %>
+          <tr>
+            <th scope="row"><%= i + 1 %></th>
+            <td><%= list[i]._id %></td>
+            <td><%= list[i].name%></td>
+            <td><%= list[i].money %></td>
+            <td><%= list[i].limit %></td>
+
+            <td>
+              <img
+                src="<%= list[i].image %>"
+                alt="<%= list[i].name %>"
+                style="max-width: 100px"
+              />
+            </td>
+            <td><%= list[i].quantity %></td>
+
+            <td>
+              <div class="action">
+                <a href="#">
+                  <button>
+                    <span
+                      data-bs-toggle="modal"
+                      data-id="<%= list[i]._id %>"
+                      data-bs-target="#myModal"
+                      class="delete button"
+                    >
+                     Xoa
+                  </button>
+                </a>
+
+                <a href="editVoucher/<%= list[i]._id %>">
+                  <button><span class="update button">Sửa</span></button>
+                </a>
+              </div>
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <div class="modal" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Xóa voucher</h4>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              Bạn Có Chắc Chắn Muốn Xóa voucher này không ?
+            </div>
+            <div class="modal-footer">
+              <button id="delete-btn" type="button" class="btn btn-success">
+                Đồng Ý
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                data-bs-dismiss="modal"
+              >
+                Hủy Bỏ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <form
+        method="POST"
+        name="delete-product-form"
+        enctype="multipart/form-data"
+      ></form>
+    </div>
+
+    <%- include('../inc/footer.ejs') %>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var voucherId;
+        var deleteForm = document.forms["delete-product-form"];
+        $("#myModal").on("show.bs.modal", function (event) {
+          var button = $(event.relatedTarget);
+          voucherId = button.data("id");
+        });
+        var btnDelete = document.getElementById("delete-btn");
+        btnDelete.onclick = function () {
+          deleteForm.action = "api/voucher/delete/" + voucherId;
+          deleteForm.submit();
+        };
+      });
+    </script>
+  </body>
+</html>

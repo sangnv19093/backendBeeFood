@@ -1,0 +1,70 @@
+<%- include('../inc/header-user.ejs') %>
+<div style="margin-top: 80px; height: 100vh; margin-left: 320px; flex: 1">
+  <div class="input-form">
+    <h3 style="text-align: center">Tạo Voucher</h3>
+    <form
+      enctype="multipart/form-data"
+      method="POST"
+      action="api/voucher/createVoucher"
+    >
+      <div class="mb-3 mt-4">
+        <label class="form-label">Tên Voucher</label>
+        <input
+          class="form-control"
+          required
+          placeholder="Nhập tên Voucher"
+          name="nameVoucher"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Số tiền </label>
+        <input
+          class="form-control"
+          required
+          type="number"
+          placeholder="Nhập giá tiền cần giảm"
+          name="voucherPrice"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Số tiền toi thieu </label>
+        <input
+          class="form-control"
+          required
+          type="number"
+          placeholder="Nhập so tien toi thieu de su dung voucher"
+          name="limit"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Hạn sử dụng </label>
+        <input
+          class="form-control"
+          required
+          type="date"
+          placeholder="Nhập giá tiền cần giảm"
+          name="voucherDate"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Chọn ảnh</label>
+        <input type="file" class="form-control" required name="image" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Số lượng voucher</label>
+        <input
+          class="form-control"
+          required
+          type="number"
+          placeholder="Số lượng voucher"
+          name="quantity"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Thêm voucher</button>
+    </form>
+  </div>
+</div>
+
+<script></script>
+<%- include('../inc/footer.ejs') %>

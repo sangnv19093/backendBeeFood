@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danh sách Sản Phẩm và Bình Luận</title>
+    <!-- Thêm Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+
+<style>
+    /* Căn giữa tất cả nội dung */
+    .table th,
+    .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    /* Đặt kích thước ảnh */
+    .product-image img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+
+    /* Căn giữa bảng và thêm khoảng cách */
+    .table-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+</style>
+
+<body>
+    <%- include('../inc/header-user.ejs') %>
+    <div style="margin-top: 80px; height: 100vh; margin-left: 320px; flex: 1; margin-bottom: 200px;">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tên Sản Phẩm</th>
+                    <th scope="col">Ảnh</th>
+                    <th scope="col">Bình luận</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i = 0; i < data.length; i++) { %>
+                <tr>
+                    <th scope="row"><%= i + 1 %></th>
+                    <td class="product-name" data-index="<%= i %>"><%= data[i].name %></td>
+                    <td class="product-image">
+                        <img
+                            src="<%= data[i].image %>"
+                            alt="<%= data[i].name %>"
+                            style="max-width: 100px"
+                        />
+                    </td>
+                    <td>
+                        <button 
+                            class="btn btn-info btn-sm view-comments" 
+                            data-index="<%= i %>"
+                            data-toggle="modal" 
+                            data-target="#myModal">
+                            Xem bình luận
+                        </button>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <%- include('../inc/footer.ejs') %>
+
+    <!-- Thêm Bootstrap JS và Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const buttons = document.querySelectorAll('.view-comments');
+  
+          buttons.forEach(function (button) {
+              button.addEventListener('click', function () {
+                  const index = this.dataset.index;
+                  const productData = JSON.parse('<%- JSON.stringify(data) %>');
+                  const comments = productData[index].listComment || [];
+
+                  let commentHTML = '';
+                  if (comments.length > 0) {
+                      comments.forEach(function (comment) {
+                          commentHTML += `<p><strong>${comment.username}:</strong> ${comment.title}</p>`;
+                      });
+                  } else {
+                      commentHTML = '<p>Không có bình luận nào.</p>';
+                  }
+
+                  document.getElementById('modal-comment').innerHTML = commentHTML;
+              });
+          });
+      });
+    </script>
+
+    <!-- Modal Bootstrap -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Bình luận sản phẩm</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" id="modal-comment">
+                    <!-- Nội dung bình luận sẽ được cập nhật tại đây -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

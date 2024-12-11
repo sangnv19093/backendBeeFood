@@ -1,0 +1,144 @@
+<%- include('../inc/header-user.ejs') %>
+<div style="margin-top: 80px; height: 100vh; margin-left: 320px; flex: 1">
+  <div>
+    <h2 class="page-title">Món Ăn Yêu Thích</h2>
+    <div id="favoriteFoodsList" class="grid-container"></div>
+  </div>
+</div>
+
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .food-item {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .food-item:hover {
+    transform: scale(1.05) translate3d(0, -10px, 0);
+  }
+
+  .food-details {
+    padding: 15px;
+    text-align: center;
+  }
+
+  .rank {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-weight: bold;
+    color: white;
+    background-color: #333;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .rank.top-1 {
+    background-color: #ff7f50;
+  }
+
+  .rank.top-2 {
+    background-color: #87cefa;
+  }
+
+  .rank.top-3 {
+    background-color: #ffd700;
+  }
+
+  .food-details img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+    border-radius: 10px 10px 0 0;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .food-details p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .page-title {
+    font-size: 24px;
+    color: #333;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Gọi API sử dụng fetch
+    fetch('/api/getLike')
+      .then(response => response.json())
+      .then(data => {
+        // Xử lý dữ liệu trả về từ API và hiển thị trên trang
+        displayFavoriteFoods(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  });
+
+  // Hàm để hiển thị danh sách món ăn yêu thích
+  function displayFavoriteFoods(favoriteFoods) {
+    const favoriteFoodsList = document.getElementById('favoriteFoodsList');
+
+    if (favoriteFoods.length > 0) {
+      // Sắp xếp mảng theo số like giảm dần
+      favoriteFoods.sort((a, b) => b.likeCount - a.likeCount);
+
+      // Hiển thị danh sách món ăn yêu thích
+      favoriteFoods.forEach((food, index) => {
+        const foodItem = document.createElement('div');
+        foodItem.classList.add('food-item');
+        foodItem.innerHTML = `
+          <div class="rank ${getRankClass(index)}">Top ${index + 1}</div>
+          <div class="food-details">
+            <img src="${food.image}" alt="${food.name}">
+            <p class="food-name">${food.name}</p>
+            <p class="like-count">Số lượt thích: ${food.likeCount}</p>
+            <p class="description">${food.description}</p>
+          </div>
+        `;
+        favoriteFoodsList.appendChild(foodItem);
+      });
+    } else {
+      // Hiển thị thông báo khi không có món ăn yêu thích
+      const noFavoriteFoodsMessage = document.createElement('p');
+      noFavoriteFoodsMessage.textContent = 'Không có món ăn yêu thích nào.';
+      favoriteFoodsList.appendChild(noFavoriteFoodsMessage);
+    }
+  }
+
+  // Hàm trả về class cho chỉ số thứ tự để áp dụng màu sắc
+  function getRankClass(index) {
+    if (index === 0) {
+      return 'top-1';
+    } else if (index === 1) {
+      return 'top-2';
+    } else if (index === 2) {
+      return 'top-3';
+    } else {
+      return '';
+    }
+  }
+</script>
+
+<%- include('../inc/footer.ejs') %>

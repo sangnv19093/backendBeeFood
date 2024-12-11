@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+    <title>Dự án tốt nghiệp</title>
+    <meta content="" name="description" />
+    <meta content="" name="keywords" />
+
+    <!-- Favicons -->
+    <link href="/assets/img/favicon.png" rel="icon" />
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+      rel="stylesheet"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link
+      href="/assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="/assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="/assets/vendor/boxicons/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link href="/assets/vendor/quill/quill.snow.css" rel="stylesheet" />
+    <link href="/assets/vendor/quill/quill.bubble.css" rel="stylesheet" />
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet" />
+    <link href="/assets/vendor/simple-datatables/style.css" rel="stylesheet" />
+
+    <!-- Template Main CSS File -->
+    <link href="/assets/css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container-fluid h-100">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#login"
+            >Đăng nhập</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#register">Đăng ký</a>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <div id="login" class="tab-pane fade show active">
+          <section class="">
+            <!-- Jumbotron -->
+            <div
+              class="px-4 py-5 px-md-5 text-center text-lg-start"
+              style="background-color: hsl(0, 0%, 96%)"
+            >
+              <div class="container">
+                <div class="row gx-lg-5 align-items-center">
+                  <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h1 class="my-5 display-3 fw-bold ls-tight">
+                      Hello ! <br />
+                      <span class="text-primary">Cảm ơn bạn đã đến</span>
+                    </h1>
+                    <p style="color: hsl(217, 10%, 50.8%)">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Eveniet, itaque accusantium odio, soluta, corrupti aliquam
+                      quibusdam tempora at cupiditate quis eum maiores libero
+                      veritatis? Dicta facilis sint aliquid ipsum atque?
+                    </p>
+                  </div>
+
+                  <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="card">
+                      <div class="card-body py-5 px-md-5">
+                        <form
+                          action="/users/login"
+                          method="post"
+                          id="loginForm"
+                          onsubmit="return validateLogin()"
+                        >
+                          <!-- 2 column grid layout with text inputs for the first and last names -->
+                          <div class="row">
+                            <div class="form-label">
+                              <label class="form-label" for="loginUsername"
+                                >Tên đăng nhập</label
+                              >
+                              <input
+                                type="text"
+                                id="loginUsername"
+                                class="form-control"
+                                name="username"
+                              />
+                            </div>
+                          </div>
+
+                          <!-- Password input -->
+                          <div class="form-outline mb-4">
+                            <label class="form-label" for="loginPassword"
+                              >Mật khẩu</label
+                            >
+                            <input
+                              type="password"
+                              id="loginPassword"
+                              class="form-control"
+                              name="password"
+                            />
+                          </div>
+
+                          <!-- Checkbox -->
+                          <div
+                            class="form-check d-flex justify-content-center mb-4"
+                          >
+                            <input
+                              class="form-check-input me-2"
+                              type="checkbox"
+                              value=""
+                              id="form2Example33"
+                            />
+                            <label
+                              class="form-check-label"
+                              for="form2Example33"
+                            >
+                              Lưu mật khẩu
+                            </label>
+                          </div>
+
+                          <!-- Submit button -->
+                          <button
+                            type="submit"
+                            class="btn btn-primary btn-block mb-4"
+                          >
+                            Đăng nhập
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Jumbotron -->
+          </section>
+        </div>
+        <div id="register" class="tab-pane fade">
+          <section class="">
+            <div
+              class="px-4 py-5 px-md-5 text-center text-lg-start"
+              style="background-color: hsl(0, 0%, 96%)"
+            >
+              <div class="container">
+                <div class="row gx-lg-5 align-items-center">
+                  <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h1 class="my-5 display-3 fw-bold ls-tight">
+                      Hãy đăng ký ngay ! <br />
+                    </h1>
+                    <p style="color: hsl(217, 10%, 50.8%)">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Eveniet, itaque accusantium odio, soluta, corrupti aliquam
+                      quibusdam tempora at cupiditate quis eum maiores libero
+                      veritatis? Dicta facilis sint aliquid ipsum atque?
+                    </p>
+                  </div>
+
+                  <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="card">
+                      <div class="card-body py-5 px-md-5">
+                        <form
+                          action="/users/signup"
+                          method="post"
+                          id="signUpForm"
+                        >
+                          <!-- 2 column grid layout with text inputs for the first and last names -->
+                          <div class="row">
+                            <div class="col-md-6 mb-4">
+                              <div class="form-label">
+                                <label class="form-label" for="account"
+                                  >Tên đăng nhập</label
+                                >
+                                <input
+                                  type="text"
+                                  id="account"
+                                  class="form-control"
+                                  name="account"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                              <div class="form-label">
+                                <label class="form-label" for="name"
+                                  >Tên nhà hàng</label
+                                >
+                                <input
+                                  type="text"
+                                  id="name"
+                                  class="form-control"
+                                  name="name"
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- Email input -->
+                          <div class="row">
+                            <div class="col-md-6 mb-4">
+                              <label class="form-label" for="signupEmail"
+                                >Email</label
+                              >
+                              <input
+                                type="email"
+                                id="signupEmail"
+                                class="form-control"
+                                name="email"
+                              />
+                            </div>
+                            <div class="col-md-6 mb-4">
+                              <label class="form-label" for="phone"
+                                >Phone</label
+                              >
+                              <input
+                                type="number"
+                                id="phone"
+                                class="form-control"
+                                name="phone"
+                              />
+                            </div>
+                          </div>
+                          <!-- Password input -->
+                          <div class="form-outline mb-4">
+                            <label class="form-label" for="signupPassword"
+                              >Mật khẩu</label
+                            >
+                            <input
+                              type="password"
+                              id="signupPassword"
+                              class="form-control"
+                              name="password"
+                            />
+                          </div>
+
+                          <div class="form-outline mb-4">
+                            <label class="form-label" for="signupRePassword"
+                              >Nhập lại mật khẩu</label
+                            >
+                            <input
+                              type="password"
+                              id="signupRePassword"
+                              class="form-control"
+                              name="rePassword"
+                            />
+                          </div>
+
+                          <!-- Checkbox -->
+                          <div
+                            class="form-check d-flex justify-content-center mb-4"
+                          >
+                            <input
+                              class="form-check-input me-2"
+                              type="checkbox"
+                              value="checkbox"
+                              id="signupCheck"
+                            />
+                            <label class="form-check-label" for="signupCheck">
+                              Đồng ý điều khoản và bảo mật
+                            </label>
+                          </div>
+                          <% try { %> <% if (message) { %>
+                          <div class="alert alert-danger" role="alert" id="msg">
+                            <%= message %>
+                          </div>
+                          <% } %> <% } catch (error) { %>
+                          <p>Có lỗi xảy ra: <%= error.message %></p>
+                          <% } %>
+                          <!-- Submit button -->
+                          <button
+                            type="submit"
+                            class="btn btn-primary btn-block mb-4"
+                          >
+                            Đăng ký
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- Vendor JS Files -->
+    <!-- Đặt mã JavaScript ở cuối phần body hoặc sau phần HTML của bạn -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("signUpForm");
+
+        // Bắt sự kiện submit của form
+        form.addEventListener("submit", async function (event) {
+          // Kiểm tra ID của form
+          event.preventDefault();
+          if (form.id === "signUpForm") {
+            // Kiểm tra mật khẩu và mật khẩu nhập lại
+            const passwordInput = document.getElementById("signupPassword");
+            const rePasswordInput = document.getElementById("signupRePassword");
+            if (passwordInput.value !== rePasswordInput.value) {
+              event.preventDefault();
+              alert("Mật khẩu nhập lại không khớp. Vui lòng kiểm tra lại.");
+              return;
+            }
+
+            // Lấy danh sách tất cả các trường input trong form
+            const formInputs = form.querySelectorAll("input");
+            // Kiểm tra xem tất cả các trường input có giá trị không
+            for (const input of formInputs) {
+              if (!input.value) {
+                // Nếu có một trường không có giá trị, ngăn chặn sự kiện submit
+                event.preventDefault();
+
+                // Hiển thị thông báo
+                alert("Vui lòng nhập đầy đủ thông tin trong form.");
+                return; // Dừng kiểm tra khi gặp trường không có giá trị
+              }
+            }
+            const checkboxInput = document.getElementById("signupCheck");
+            if (!checkboxInput.checked) {
+              event.preventDefault();
+              alert("Vui lòng đồng ý với điều khoản và bảo mật.");
+            }
+
+            const account = document.getElementById("account").value;
+            const email = document.getElementById("signupEmail").value;
+
+            try {
+              const response = await fetch("/res/check-register", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ account, email }),
+              });
+              console.log(response);
+              if (response.ok) {
+                const result = await response.json();
+                console.log(result);
+                if (result.accountExists || result.emailExists) {
+                  alert(
+                    "Tài khoản hoặc email đã tồn tại. Vui lòng chọn thông tin khác."
+                  );
+                } else {
+                  // Nếu tài khoản và email không tồn tại, có thể submit form
+                  form.submit();
+                }
+              } else {
+                event.preventDefault();
+
+                alert("Có lỗi khi kiểm tra tài khoản và email.");
+              }
+            } catch (error) {
+              event.preventDefault();
+              console.error("Lỗi khi kiểm tra tài khoản và email:", error);
+              alert("Có lỗi khi kiểm tra tài khoản và email.");
+            }
+          }
+        });
+      });
+    </script>
+    <script src="/assets/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendor/chart.js/chart.umd.js"></script>
+    <script src="/assets/vendor/echarts/echarts.min.js"></script>
+    <script src="/assets/vendor/quill/quill.min.js"></script>
+    <script src="/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="/assets/vendor/tinymce/tinymce.min.js"></script>
+    <script src="/assets/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="/assets/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  </body>
+</html>
